@@ -1,1 +1,1 @@
-web: gunicorn nfllinescomp --log-file -
+web: gunicorn nfllinescomp.wsgi
