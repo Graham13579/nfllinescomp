@@ -1,1 +1,1 @@
-web: gunicorn crm1 --log-file -
+web: gunicorn nfllinescomp --log-file -
