@@ -1,0 +1,15 @@
+{% extends "groups/group_base.html" %}
+{% block group_content %}
+
+<h1 id="publicgroupsheader">{{group_name | truncatechars:30}} Has Already Reached Its Maximum Number of Players</h1>
+<div id="grouplisthome">
+    {% for group in object_list %}
+        {% if group.privacy == 'Public' %}
+            <a href="{% url 'groups:single' slug=group.slug %}" class="list-group-item">
+                <h1 id="grouplistheader">{{group.name | truncatechars:16}}</h1>
+                <p id="grouplistcontent">Length: {{group.length}} &nbsp;&nbsp;&nbsp; Picks Per Week: {{group.ppw}} &nbsp;&nbsp;&nbsp; Players: {{group.members.count}}/{{group.numplayers}}</p>
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

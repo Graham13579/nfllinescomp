@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="header">
+    <div class="header__title">
+        <h1 class="header__title--words">NFL Lines Competition</h1>
+    </div>
+    <div class="header__description">
+        <p class="header__description--words">Welcome to the NFL Lines Competition! To get started, either join or create a group, make your picks for the week, and root for your favorite teams on Sunday!</p>
+    </div>
+    {% if user.is_authenticated %}
+        <div class="header__log">
+            <a href="{% url 'accounts:logout' %}" class="btn header__log__btn">Log Out</a>
+        </div>
+        <div class="header__nav">
+            <ul class="header__nav__items">
+                <li class="header__nav__item">
+                    <a href="{% url 'groups:mygroups' %}" class="header__nav__item__link">
+                        <i class="fas fa-users header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">My Groups</p>
+                        <p class="header__nav__item__description">View the groups that you are currently a member of</p>
+                    </a>
+                </li>
+                <li class="header__nav__item">
+                    <a href="{% url 'groups:find' %}" class="header__nav__item__link">
+                        <i class="fas fa-search header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">Find Groups</p>
+                        <p class="header__nav__item__description">Find a new group (by name or specific attributes)</p>
+                    </a>
+                </li>
+                <li class="header__nav__item">
+                    <a href="{% url 'groups:create' %}" class="header__nav__item__link">
+                        <i class="fas fa-plus-square header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">Create Group</p>
+                        <p class="header__nav__item__description">Create a new group customized to your specific preferences</p>
+                    </a>
+                </li>
+                <li class="header__nav__item">
+                    <a href="{% url 'makepicks' %}" class="header__nav__item__link">
+                        <i class="fas fa-football-ball header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">Make Picks</p>
+                        <p class="header__nav__item__description">Quickly make picks for all of your groups</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% else %}
+        <div class="header__log">
+            <a href="{% url 'accounts:signup' %}" class="btn header__log__btn">Sign Up</a>
+            <a href="{% url 'accounts:login' %}" class="btn header__log__btn">Log In</a>
+        </div>
+        <div class="header__nav">
+            <ul class="header__nav__items">
+                <li class="header__nav__item">
+                    <a href="{% url 'accounts:login' %}" class="header__nav__item__link">
+                        <i class="fas fa-sign-in-alt header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">Log In</p>
+                        <p class="header__nav__item__description">Log in here if you are a returning member</p>
+                    </a>
+                </li>
+                <li class="header__nav__item">
+                    <a href="{% url 'accounts:signup' %}" class="header__nav__item__link">
+                        <i class="fas fa-user-plus header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">Sign Up</p>
+                        <p class="header__nav__item__description">Make an account if you are new to the site</p>
+                    </a>
+                </li>
+                <li class="header__nav__item">
+                    <a href="{% url 'groups:find' %}" class="header__nav__item__link">
+                        <i class="fas fa-search header__nav__item__icon"></i>
+                        <p class="header__nav__item__title">Find Groups</p>
+                        <p class="header__nav__item__description">See what lies ahead before signing in</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+</div>
+<!-- <div class="grouplist">
+    <div class="grouplist__title">
+        <h2 class="header__title--words">Join a Group</h2>
+    </div>
+    <div class="grouplist__list">
+        {% for group in object_list %}
+            {% if group.privacy == 'Public' %}
+                {% if group.active == True %}
+                <div class="gli">
+                    <a href="{% url 'groups:single' slug=group.slug %}" class="gli__link">
+                        <p class="gli__title">{{group.name | truncatechars:16}}</p>
+                        <p class="gli__length">Length: {{group.length}}</p>
+                        <p class="gli__ppw">Picks Per Week: {{group.ppw}}</p>
+                        <p class="gli__playercount">Players: {{group.members.count}}/{{group.numplayers}}</p>
+                    </a>
+                </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div> -->
+{% endblock %}

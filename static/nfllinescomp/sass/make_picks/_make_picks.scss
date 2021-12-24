@@ -1,0 +1,136 @@
+.make_picks{
+    grid-row: 1/2;
+    grid-column: 1/-1;
+
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(14rem, 1fr));
+
+    &__form{
+        grid-column: 1/-1;
+        grid-row: 1/2;
+
+        display: grid;
+        grid-template-rows: max-content;
+        grid-template-columns: repeat(2, minmax(14rem, 1fr));
+
+        &__left{
+            grid-column: 1/2;
+            grid-row: 1/2;
+    
+            &__title{
+                text-align: center;
+                font-size: 4rem;
+                margin-top: 6rem;
+            }
+    
+            &__body{
+                text-align: center;
+            }
+        }
+    
+        &__right{
+            grid-column: 2/2;
+            grid-row: 1/2;
+
+            &__cangroups{
+                &__title{
+                    font-size: 4rem;
+                }
+
+                &__content{
+                    max-height: 50rem;
+                    overflow-y: scroll;
+
+                    &__group{
+                        text-align: center;
+            
+                        margin: 1.5rem;
+            
+                        &__link:link,
+                        &__link:visited{
+                            text-decoration: none;
+                            color: #fff;
+                        }
+            
+                        &__header{
+                            font-size: 3rem;
+                        }
+            
+                        &__description{
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+
+            &__cannotgroups{
+                margin-top: 6rem;
+
+                &__title{
+                    font-size: 4rem;
+                }
+
+                &__content{
+                    max-height: 30rem;
+                    overflow-y: scroll;
+
+                    &__group{
+                        text-align: center;
+            
+                        margin: 1.5rem;
+            
+                        &__link:link,
+                        &__link:visited{
+                            text-decoration: none;
+                            color: #fff;
+                        }
+            
+                        &__header{
+                            font-size: 3rem;
+                        }
+            
+                        &__description{
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+
+            &__submit{
+                margin-top: 3rem;
+            }
+        }
+    }
+}
+
+ul{
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+li{
+    display: inline-block;
+}
+
+input[type="checkbox"]{
+    display: none;
+}
+
+h4{
+    font-size: 3rem;
+    text-align: center;
+    margin: 0 1.5rem 0 1.5rem;
+}
+
+img{
+    transition: all 1s;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

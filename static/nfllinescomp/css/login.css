@@ -1,0 +1,67 @@
+.login {
+  grid-row: 1/2;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-rows: 100vh; }
+  .login__title {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    text-align: center;
+    font-size: 6rem;
+    margin-top: 6rem; }
+  .login__form {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    background-color: #ececec;
+    padding: 3rem;
+    align-self: center;
+    justify-self: center; }
+    .login__form__field {
+      width: 45rem; }
+      .login__form__field:not(:last-child) {
+        margin-bottom: 2rem; }
+      .login__form__field__label {
+        display: inline-block; }
+      .login__form__field__label > * {
+        font-size: 3rem;
+        margin-right: 2rem;
+        background-image: linear-gradient(to right, #389D38, #328332);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent; }
+      .login__form__field__input {
+        display: inline-block;
+        width: 80%; }
+      .login__form__field__input > * {
+        font-size: 1.5rem;
+        font-family: inherit;
+        color: inherit;
+        padding: 1.5rem 2rem;
+        border-radius: 2px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        width: 100%;
+        display: block;
+        transition: all .3s; }
+        .login__form__field__input > *:focus {
+          outline: none;
+          box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); }
+        .login__form__field__input > *::-webkit-input-placeholder {
+          color: grey; }
+    .login__form__submit {
+      width: 100%;
+      height: 6rem;
+      font-size: 3rem;
+      margin-bottom: 3rem; }
+    .login__form__password_reset__container {
+      width: 100%;
+      display: flex;
+      height: 5rem; }
+    .login__form__password_reset:link, .login__form__password_reset:visited {
+      justify-self: center;
+      text-decoration: none;
+      width: 50%;
+      height: 5rem;
+      font-size: 1.5rem;
+      margin: 0 auto; }

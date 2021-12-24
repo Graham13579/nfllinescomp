@@ -1,0 +1,53 @@
+.leave_group_confirm{
+    grid-row: 1/2;
+    grid-column: 1/-1;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+
+    &__title{
+        grid-column: 1/-1;
+        grid-row: 1/2;
+
+        text-align: center;
+        font-size: 6rem;
+        margin-top: 6rem;
+    }
+
+    &__buttons{
+        grid-column: 1/-1;
+        grid-row: 1/2;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        margin-top: 33rem;
+        margin-bottom: 15rem;
+
+        &__cancel{
+            text-decoration: none;
+            font-size: 4rem;
+        }
+
+        &__leave{
+            &:hover{
+                background-color: #9c1703;
+            }
+
+            background-color: #ff351f;
+            text-decoration: none;
+            font-size: 4rem;
+            padding-left: 4.5rem;
+            padding-right: 4.5rem;
+        }
+    }
+
+    &__notmember{
+        grid-column: 1/-1;
+        grid-row: 1/2;
+
+        text-align: center;
+        font-size: 6rem;
+        margin-top: 6rem;
+    }
+}

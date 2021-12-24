@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login">
+    <h2 class="login__title">NFL Lines Competition</h2>
+    <form method="POST" class="login__form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="login__form__field">
+                <div class="login__form__field__errors">
+                    {{ field.errors }}
+                </div>
+                <div class="login__form__field__label">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="login__form__field__input">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <input class="btn login__form__submit" type="submit" value="Login">
+        <div class="login__form__password_reset__container">
+            <a class="btn login__form__password_reset" href="{% url 'accounts:passwordreset' %}">Forgot Password?</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        document.getElementsByClassName("fas fa-user")[1].className = "fas fa-key"
+
+        document.getElementById("id_username").placeholder='Username'
+        document.getElementById("id_password").placeholder='Password'
+    })
+</script>
+{% endblock %}
+
+<!-- <h1>Login</h1>
+<form method="POST" action=''>
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+    </div>
+{% endfor %}
+    <input type="submit" value="Login">
+    <a href="{% url 'accounts:passwordreset' %}">Reset Password</a>
+</form> -->

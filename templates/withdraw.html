@@ -1,0 +1,17 @@
+<!-- {% extends 'base.html' %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/withdraw.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<h2>Withdraw</h2>
+
+<form method="POST" action="{% url 'withdrawinbetween' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %} -->

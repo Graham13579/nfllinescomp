@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="signup">
+    <h2 class="signup__title">NFL Lines Competition</h2>
+    <form method="POST" class="signup__form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="signup__form__field">
+                <div class="signup__form__field__errors">
+                    {{ field.errors }}
+                </div>
+                <div class="signup__form__field__label">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="signup__form__field__input">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <input class="btn signup__form__submit" type="submit" value="Sign Up">
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        document.getElementsByClassName("fas fa-user")[1].className = "fas fa-envelope"
+        document.getElementsByClassName("fas fa-user")[1].className = "fas fa-key"
+        document.getElementsByClassName("fas fa-user")[1].className = "fas fa-check-square"
+
+        document.getElementById("id_username").placeholder='Username'
+        document.getElementById("id_email").placeholder='Email'
+        document.getElementById("id_password1").placeholder='Password'
+        document.getElementById("id_password2").placeholder='Re-enter Password'
+    })
+</script>
+{% endblock %}
+
+<!-- <div class="container">
+    <h1>Sign Up</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Sign Up">
+    </form>
+</div> -->

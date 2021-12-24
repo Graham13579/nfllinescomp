@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/leave_group_confirm.css' %}">
+{% endblock %}
+{% block content %}
+<div class="leave_group_confirm">
+    {% if user in group.members.all %}
+    <h6 class="leave_group_confirm__title">Are You Sure That You Would Like to Leave {{group.name}}?</h6>
+    <div class="leave_group_confirm__buttons">
+        <a href="{% url 'groups:single' slug=group.slug %}" class="btn leave_group_confirm__buttons__cancel">Cancel</a>
+        <a href="{% url 'groups:leave' slug=group.slug %}" class="btn leave_group_confirm__buttons__leave">Leave</a>
+    </div>
+    {% else %}
+    <h6 class="leave_group_confirm__notmember">You are not a member of {{group.name}}</h6>
+    {% endif %}
+</div>
+{% endblock %}
+
+<!-- {% block group_content %}
+{% if user in group.members.all %}
+    <h1>Are You Sure That You Would Like to Leave {{group.name}}</h1>
+    <a id="cancelleavegrouplink" href="{% url 'groups:single' slug=group.slug %}">Cancel</a>
+    <a id="confirmleavegrouplink" href="{% url 'groups:leave' slug=group.slug %}">Leave</a>
+{% else %}
+    <h1>You are not a member of {{group.name}}</h1>
+{% endif %}
+
+{% endblock %} -->

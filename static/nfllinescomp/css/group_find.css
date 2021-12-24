@@ -1,0 +1,104 @@
+.group_find {
+  grid-row: 1/2;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .group_find__title {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    text-align: center;
+    font-size: 6rem;
+    margin-top: 6rem; }
+  .group_find__form {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    margin-top: 15rem;
+    background-color: #ececec;
+    padding: 3rem;
+    justify-self: center;
+    height: 28rem;
+    width: 80%; }
+    .group_find__form__label-name {
+      font-size: 3rem;
+      text-align: center;
+      display: block; }
+    .group_find__form__input-name {
+      font-size: 2.5rem;
+      font-family: inherit;
+      padding: 1.5rem 2rem;
+      border-radius: 2px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      width: 72%;
+      display: inline-block;
+      transition: all .3s;
+      color: #afafaf;
+      font-weight: 300;
+      margin-right: 2%; }
+      .group_find__form__input-name:focus {
+        outline: none;
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); }
+      .group_find__form__input-name::-webkit-input-placeholder {
+        color: grey; }
+    .group_find__form__container {
+      width: 25.7%;
+      display: inline-block;
+      height: 5.9rem;
+      transform: translateY(0.3rem); }
+    .group_find__form__submit {
+      font-size: 2.5rem;
+      height: 5.9rem;
+      width: 100%;
+      display: inline-block; }
+    .group_find__form__fields {
+      margin-top: 3rem;
+      width: 100%;
+      display: flex;
+      justify-content: space-between; }
+    .group_find__form__field__label {
+      font-size: 2rem;
+      text-align: center;
+      display: inline-block;
+      margin-right: 1rem; }
+    .group_find__form__field__input {
+      font-size: 2rem;
+      font-family: inherit;
+      padding: 1.5rem 1rem 1.5rem 2rem;
+      border-radius: 2px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      width: 10rem;
+      display: inline-block;
+      transition: all .3s;
+      color: #afafaf;
+      font-weight: 300;
+      margin-right: 2.5rem; }
+      .group_find__form__field__input:focus {
+        outline: none;
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); }
+      .group_find__form__field__input::-webkit-input-placeholder {
+        color: grey; }
+    .group_find__form__clear_all {
+      height: 5.4rem;
+      width: 15rem;
+      text-align: center; }
+  .group_find__group_display {
+    height: 50rem;
+    width: 80%;
+    justify-self: center;
+    background-color: #ececec;
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    overflow-y: scroll;
+    margin-top: 50rem;
+    margin-bottom: 10rem; }
+    .group_find__group_display__group {
+      text-align: center;
+      margin: 1.5rem; }
+      .group_find__group_display__group__link:link, .group_find__group_display__group__link:visited {
+        text-decoration: none;
+        color: #fff; }
+      .group_find__group_display__group__header {
+        font-size: 3rem; }
+      .group_find__group_display__group__description {
+        font-size: 1.8rem; }

@@ -1,0 +1,36 @@
+*,
+*::before,
+*::after{
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html{
+    box-sizing: border-box;
+    font-size: 62.5%; // 1rem=10px
+}
+
+body{
+    font-family: sans-serif;
+    color: black;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.body--container{
+    display: grid;
+    grid-template-rows: min-content;
+    grid-template-columns: [full-start] minmax(6rem, 1fr) [center-start] repeat(8, [col-start] minmax(min-content, 20rem) [col-end]) [center-end] minmax(6rem, 1fr) [full-end];
+}
+
+.mycontainer{
+    grid-row: 1/2;
+    grid-column: center-start/center-end;
+    display: grid;
+    width: 100%;
+    grid-template-rows: min-content;
+    margin: 0;
+    justify-self: center;
+    align-self: center;
+}

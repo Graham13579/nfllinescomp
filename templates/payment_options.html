@@ -1,0 +1,15 @@
+<!-- {% extends 'base.html' %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/payment_options.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<h1>Pick Your Form of Payment</h1>
+{% for creditpaymentpackage in creditpaymentpackages %}
+    <h2>{{ creditpaymentpackage.name }}</h2>
+    <p>Price: {{ creditpaymentpackage.price }}</p>
+    <a href="{% url 'payment' creditpaymentpackage.pk %}">Pay</a>
+{% endfor %}
+{% endblock %} -->

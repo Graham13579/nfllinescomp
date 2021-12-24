@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/group_make_picks.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="group_make_picks">
+    <div class="group_make_picks__left">
+        <h5 class="group_make_picks__left__title">Make Your Picks For {{ group.name | truncatechars:20 }}</h5>
+        <form class="group_make_picks__left__form" method="POST">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form }}
+            {% endfor %}
+            {% if pickingplayer.picks.count != games.count %}
+                {% if pickingplayer.picks.count != group.ppw %}
+                    <input type="submit" class="btn group_make_picks__left__form__submit">
+                    <div class="group_make_picks__left__form__messages">
+                        {% for message in messages %}
+                            <p class="group_make_picks__left__form__messages__message">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+    <div class="group_make_picks__right">
+        <div class="group_make_picks__right__groupleaderboard">
+            <h6 class="group_make_picks__right__groupleaderboard__title">Leaderboard</h6>
+            {% for member in members %}
+                <div class="group_make_picks__right__groupleaderboard__player" onclick=displaygroupmemberpicksleaderboard(id)>
+                    <h6 class="group_make_picks__right__groupleaderboard__player__nameandscore">{{member | truncatechars:20}} {{member.score}}</h6>
+                    <div class="group_make_picks__right__groupleaderboard__player__picks" style="visibility: hidden; opacity: 0; position: absolute;">
+                        {% for playerpick in playerpicks %}
+                            {% if playerpick.player == member %}
+                                <p class="group_make_picks__right__groupleaderboard__player__picks__text">{{ playerpick.teampicked }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+        var leaderboardmemberpicktoggle=$(".group_make_picks__right__groupleaderboard__player");
+        var i=0;
+        $(leaderboardmemberpicktoggle).each(function(index) {
+            $(this).attr("id","group_make_picks__right__groupleaderboard__player"+i);
+            i++;
+        });
+        $('label').each(function(){
+            if($(this).text() == 'Teampicked:'){
+                $(this).remove()
+            }
+        });
+        var z=-1
+        $("input[type=checkbox]").each(function(index){
+            if(index !== 0){
+                if (z == -1){
+                    z=i
+                    idoffirstcheckbox=(z) % 2
+                }
+                i++;
+                var gamelines=JSON.parse('{{gamelines|escapejs}}')
+                $(this).attr("id","makepicksformid"+i);
+                var id=$(this).attr('id')
+                newlabel=document.createElement('Label')
+                newlabel.setAttribute('for',id)
+                var teampictureaccess=(this.value).replace(' ','_')+".jpg"
+                teampictureaccess=teampictureaccess.replace(' ','_')
+                newlabel.innerHTML='<img src="../../static/nfllinescomp/images/'+teampictureaccess+'">'
+                newlabel.children[0].height="150"
+                newlabel.children[0].width="150"
+                parent=this.parentElement
+                parent.insertBefore(newlabel,this)
+                if (i % 2 == (z-1)){
+                    line=document.createElement('h4')
+                    line.style='display:inline-block'
+                    var gamefavorite=teampictureaccess
+                    var actualgamefavorite=gamefavorite.split('.jpg')[0].replace('_',' ').replace('_',' ')
+                    for (var x in gamelines){
+                        if (actualgamefavorite == x){
+                            var actualgameline=(gamelines[x])
+                        }
+                    }
+                    line.innerText=actualgameline
+                    parent.parentElement.parentElement.insertBefore(line,newlabel.parentElement.parentElement.nextSibling)
+                }
+                var text=$(this).parent().html()
+                var teamname=' '+this.value
+                text=text.replace(teamname,'')
+                $(this).parent().html(text)
+            }
+        });
+    });
+
+    function displaygroupmemberpicksleaderboard(id) {
+          var x=document.getElementById(id).children[1];
+          if (x.style.opacity==0){
+                x.style.opacity=1;
+                x.style.visibility="visible";
+                x.style.position="static";
+          } else{
+                x.style.opacity=0;
+                x.style.visibility="hidden";
+                x.style.position="absolute";
+          }
+    }
+
+    setTimeout(function(){
+        var i=0
+        $("input[type=checkbox]").each(function(index){
+            i++;
+            $(this).click(function(){
+                var id=$(this).attr('id')
+                var idnumber=id.slice(15,)
+                if(idoffirstcheckbox == 1){
+                    if (idnumber % 2 == 0){
+                        var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                    if (idnumber % 2 == 1){
+                        var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                }
+                else{
+                    if (idnumber % 2 == 0){
+                        var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                    if (idnumber % 2 == 1){
+                        var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                }
+            })
+        })
+    },75)
+</script>
+
+{% endblock %}
+
+<!-- <div class="row">
+    <div class="col-6">
+        <h1>Make Your Picks For {{group.name | truncatechars:20}}</h1>
+        <form id="makegrouppicksform" method="POST">
+            <div class="makegrouppicksformsection">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    {{ form }}
+                {% endfor %}
+            </div>
+            {% if pickingplayer.picks.count != games.count %}
+                {% if pickingplayer.picks.count != group.ppw %}
+                    <input type="submit" value="Make Picks">
+                    <div class="messages">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        
+        </form>
+    </div>
+    <div class="col-6">
+        <h1 id="groupleaderboardheader">Leaderboard</h1>
+        <div class="groupleaderboard">
+            {% for member in members %}
+                <div class="leaderboardmemberpicktoggle" onclick=displaygroupmemberpicksleaderboard(id)>
+                    <h3 id="groupleaderboardmember">{{member | truncatechars:20}} {{member.score}}</h3>
+                    <div id="groupleaderboardmemberpicks" style="visibility: hidden; opacity: 0; position: absolute;">
+                        {% for playerpick in playerpicks %}
+                            {% if playerpick.player == member %}
+                                <h6>{{ playerpick.teampicked }}</h6>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+        var leaderboardmemberpicktoggle=$(".leaderboardmemberpicktoggle");
+        var i=0;
+        $(leaderboardmemberpicktoggle).each(function(index) {
+            i++;
+            $(this).attr("id","leaderboardmemberpicktoggle"+i);
+        });
+        $('label').each(function(){
+            if($(this).text() == 'Teampicked:'){
+                $(this).remove()
+            }
+        });
+        var z=-1
+        $("input[type=checkbox]").each(function(index){
+            if (z == -1){
+                z=i
+                idoffirstcheckbox=(z) % 2
+            }
+            i++;
+            var gamelines=JSON.parse('{{gamelines|escapejs}}')
+            $(this).attr("id","makepicksformid"+i);
+            var id=$(this).attr('id')
+            newlabel=document.createElement('Label')
+            newlabel.setAttribute('for',id)
+            var teampictureaccess=(this.value).replace(' ','_')+".jpg"
+            teampictureaccess=teampictureaccess.replace(' ','_')
+            newlabel.innerHTML='<img src="../../static/nfllinescomp/images/'+teampictureaccess+'">'
+            newlabel.children[0].height="150"
+            newlabel.children[0].width="150"
+            parent=this.parentElement
+            parent.insertBefore(newlabel,this)
+            if (i % 2 == (z-1)){
+                line=document.createElement('h4')
+                line.style='display:inline-block'
+                var gamefavorite=teampictureaccess
+                var actualgamefavorite=gamefavorite.split('.jpg')[0].replace('_',' ').replace('_',' ')
+                for (var x in gamelines){
+                    if (actualgamefavorite == x){
+                        var actualgameline=(gamelines[x])
+                    }
+                }
+                line.innerText=actualgameline
+                parent.parentElement.parentElement.insertBefore(line,newlabel.parentElement.parentElement.nextSibling)
+            }
+            var text=$(this).parent().html()
+            var teamname=' '+this.value
+            text=text.replace(teamname,'')
+            $(this).parent().html(text)
+        });
+    });
+
+    function displaygroupmemberpicksleaderboard(id) {
+      var x=document.getElementById(id).children[1];
+      if (x.style.opacity==0) {
+            x.style.opacity=1;
+            x.style.visibility="visible";
+            x.style.position="static";
+      } else {
+            x.style.opacity=0;
+            x.style.visibility="hidden";
+            x.style.position="absolute";
+      }
+    }
+
+    setTimeout(function(){
+        var i=0
+        $("input[type=checkbox]").each(function(index){
+            i++;
+            $(this).click(function(){
+                var id=$(this).attr('id')
+                var idnumber=id.slice(15,)
+                if(idoffirstcheckbox == 1){
+                    if (idnumber % 2 == 0){
+                        var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                    if (idnumber % 2 == 1){
+                        var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                }
+                else{
+                    if (idnumber % 2 == 0){
+                        var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                    if (idnumber % 2 == 1){
+                        var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                        var helmetimg=this.previousSibling.children[0]
+                        if (this.checked == true){
+                            helmetimg.height="200"
+                            helmetimg.width="200"
+                        }
+                        else{
+                            helmetimg.height="150"
+                            helmetimg.width="150"
+                        }
+                        if (document.getElementById(checkid).checked == true){
+                            document.getElementById(checkid).checked = false
+                            document.getElementById(checkid).previousSibling.children[0].height="150"
+                            document.getElementById(checkid).previousSibling.children[0].width="150"
+                        }
+                    }
+                }
+            })
+        })
+    },150)
+</script> -->

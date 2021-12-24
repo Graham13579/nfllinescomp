@@ -1,0 +1,65 @@
+.group_detail {
+  grid-row: 1/2;
+  grid-column: 1/-1;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(14rem, 1fr)); }
+  .group_detail__left {
+    grid-column: 1/2;
+    grid-row: 1/2; }
+    .group_detail__left__title {
+      text-align: center;
+      font-size: 6rem;
+      margin-top: 6rem; }
+      .group_detail__left__title__outside {
+        text-align: center;
+        font-size: 6rem;
+        margin-top: 3rem; }
+    .group_detail__left__details {
+      text-align: center;
+      font-size: 2rem;
+      margin-top: 2rem; }
+    .group_detail__left__copybox {
+      text-align: center;
+      margin-top: 2rem; }
+      .group_detail__left__copybox__text {
+        font-size: 2rem; }
+      .group_detail__left__copybox__url {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem; }
+    .group_detail__left__jo {
+      margin-top: 9rem;
+      text-align: center; }
+      .group_detail__left__jo__join {
+        text-decoration: none; }
+    .group_detail__left__description {
+      text-align: center; }
+      .group_detail__left__description__text {
+        font-size: 1.5rem; }
+  .group_detail__right {
+    grid-column: 2/2;
+    grid-row: 1/2; }
+    .group_detail__right__makegrouppicks {
+      text-align: center;
+      margin-top: 9rem; }
+      .group_detail__right__makegrouppicks__inner {
+        text-decoration: none; }
+    .group_detail__right__groupleaderboard {
+      text-align: center;
+      margin-top: 4rem; }
+      .group_detail__right__groupleaderboard__title {
+        font-size: 5rem; }
+      .group_detail__right__groupleaderboard__player__nameandscore {
+        font-size: 3rem; }
+      .group_detail__right__groupleaderboard__player__picks__text {
+        font-size: 2rem; }
+      .group_detail__right__groupleaderboard__empty {
+        font-size: 3rem; }
+    .group_detail__right__uple {
+      margin-top: 3rem;
+      text-align: center; }
+      .group_detail__right__uple__update {
+        text-decoration: none;
+        margin-right: 1rem; }
+      .group_detail__right__uple__leave {
+        text-decoration: none; }

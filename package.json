@@ -1,0 +1,24 @@
+{
+  "name": "nfllinescomp",
+  "version": "1.0.0",
+  "description": "nfllinescomp webpage",
+  "main": "index.js",
+  "scripts": {
+    "watch:sass": "node-sass static/nfllinescomp/sass/master/main.scss static/nfllinescomp/css/master.css -w",
+    "devserver": "live-server",
+    "start": "npm-run-all --parallel devserver watch:sass",
+    "compile:sass": "node-sass static/nfllinescomp/sass/main/main.scss static/nfllinescomp/css/style.comp.css",
+    "prefix:css": "postcss --use autoprefixer -b  \"last 10 versions\" static/nfllinescomp/css/style.comp.css -o static/nfllinescomp/css/style.prefix.css",
+    "compress:css": "node-sass static/nfllinescomp/css/style.prefix.css static/nfllinescomp/css/main.css --output-style compressed",
+    "build:css": "npm-run-all compile:sass prefix:css compress:css"
+  },
+  "author": "Graham",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^7.1.4",
+    "concat": "^1.0.3",
+    "node-sass": "^4.14.1",
+    "npm-run-all": "^4.1.1",
+    "postcss-cli": "^4.1.1"
+  }
+}

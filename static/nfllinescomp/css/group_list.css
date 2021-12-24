@@ -1,0 +1,31 @@
+.group_list {
+  grid-row: 1/2;
+  grid-column: 1/-1;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .group_list__title {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    text-align: center;
+    font-size: 6rem;
+    margin-top: 6rem; }
+  .group_list__group_display {
+    height: 65rem;
+    width: 80%;
+    justify-self: center;
+    background-color: #ececec;
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    overflow-y: scroll;
+    margin-top: 15rem; }
+    .group_list__group_display__group {
+      text-align: center;
+      margin: 1.5rem; }
+      .group_list__group_display__group__link:link, .group_list__group_display__group__link:visited {
+        text-decoration: none;
+        color: #fff; }
+      .group_list__group_display__group__header {
+        font-size: 3rem; }
+      .group_list__group_display__group__description {
+        font-size: 1.8rem; }

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/group_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="group_list">
+    <h2 class="group_list__title">Your Groups</h2>
+    <div class="group_list__group_display">
+        {% for group in object_list %}
+            {% if user in group.members.all %}
+                <div class="btn group_list__group_display__group">
+                    <a href="{% url 'groups:single' slug=group.slug %}" class="group_list__group_display__group__link">
+                        <h4 class="group_list__group_display__group__header">{{ group.name | truncatechars:30 }}</h4>
+                        <p class="group_list__group_display__group__description">
+                            <span class="group_list__group_display__group__description__length">Length: {{ group.length }}</span>
+                            <span class="group_list__group_display__group__description__ppw">Picks per week: {{ group.ppw }}</span>
+                            <span class="group_list__group_display__group__description__numplayers">Player count: {{ group.members.count }} / {{group.numplayers }}</span>
+                        </p>
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+<!-- <h1 id="mygroupsheader">Your Groups</h1>
+
+<div class="mygroupslist">
+    {% for group in object_list %}
+        {% if user in group.members.all %}
+            <a href="{% url 'groups:single' slug=group.slug %}" class="list-group-item">
+                <h1 id="grouplistheader">{{group.name | truncatechars:30}}</h1>
+                <p id="grouplistcontent">Length: {{group.length}} &nbsp;&nbsp;&nbsp; Picks Per Week: {{group.ppw}} &nbsp;&nbsp;&nbsp; Players: {{group.members.count}}/{{group.numplayers}}</p>
+            </a>
+        {% endif %}
+    {% endfor %}
+</div> -->

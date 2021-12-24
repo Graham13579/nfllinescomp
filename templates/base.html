@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>NFL Lines Competition</title>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
+
+        <script src="https://kit.fontawesome.com/513548b4f8.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="{% static 'nfllinescomp/css/master.css' %}">
+
+        {% block headcontent %}
+
+        {% endblock %}
+
+    </head>
+    <body class="body--container">
+
+        <div class="mycontainer">
+            <div class="nav">
+                <input type="checkbox" class="nav__checkbox" id="nav-toggle">
+
+                <!-- <div class="nav__background">&nbsp;</div> -->
+
+                <nav class="nav__navigation">
+                    <ul class="nav__list">
+                        {% if user.is_authenticated %}
+                            <li class="nav__item"><a href="{% url 'home' %}" class="nav__link__in">NFL Lines Competition</a></li>
+                            <li class="nav__item"><a href="{% url 'groups:mygroups' %}" class="nav__link__in">My Groups</a></li>
+                            <li class="nav__item"><a href="{% url 'groups:find' %}" class="nav__link__in">Find Groups</a></li>
+                            <li class="nav__item"><a href="{% url 'groups:create' %}" class="nav__link__in">Create Group</a></li>
+                            <li class="nav__item"><a href="{% url 'makepicks' %}" class="nav__link__in">Make Picks</a></li>
+                            <li class="nav__item"><a href="{% url 'accounts:logout' %}" class="nav__link__in">Log Out</a></li>
+                        {% else %}
+                            <li class="nav__item"><a href="{% url 'home' %}" class="nav__link__out">NFL Lines Competition</a></li>
+                            <li class="nav__item"><a href="{% url 'accounts:login' %}" class="nav__link__out">Log In</a></li>
+                            <li class="nav__item"><a href="{% url 'accounts:signup' %}" class="nav__link__out">Sign Up</a></li>
+                            <li class="nav__item"><a href="{% url 'groups:find' %}" class="nav__link__out">Find Groups</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+                <div class="nav__btn">
+                    <label for="nav-toggle" class="nav__btn__label">
+                        <span class="nav__icon">&nbsp;</span>
+                    </label>
+                </div>
+            </div>
+            {% block content %}
+
+            {% endblock %}
+            <!-- <footer class="footer">
+                <ul class="footer__social-links">
+                    <li class="footer__social-links__link">
+                        <a href="#" class="facebook footer__links">
+                            <img src="{% static 'nfllinescomp/images/facebook_icon.png' %}" alt="Facebook logo" class="footer__img">
+                        </a>
+                    </li>
+                    <li class="footer__social-links__link">
+                        <a href="#" class="instagram footer__links">
+                            <img src="{% static 'nfllinescomp/images/instagram_icon.png' %}" alt="Instagram logo" class="footer__img">
+                        </a>
+                    </li>
+                    <li class="footer__social-links__link">
+                        <a href="#" class="twitter footer__links">
+                            <img src="{% static 'nfllinescomp/images/twitter_icon.png' %}" alt="Twitter logo" class="footer__img">
+                        </a>
+                    </li>
+                </ul>
+                <ul class="footer__nav">
+                    <li class="footer__nav__item">
+                        <a href="#" class="footer__nav__item--inner">Contact Us</a>
+                    </li>
+                    <li class="footer__nav__item">
+                        <a href="#" class="footer__nav__item--inner">Contact Us</a>
+                    </li>
+                    <li class="footer__nav__item">
+                        <a href="#" class="footer__nav__item--inner">Contact Us</a>
+                    </li>
+                    <li class="footer__nav__item">
+                        <a href="#" class="footer__nav__item--inner">Contact Us</a>
+                    </li>
+                    <li class="footer__nav__item">
+                        <a href="#" class="footer__nav__item--inner">Contact Us</a>
+                    </li>
+                </ul>
+            </footer> -->
+        </div>
+        <script type="text/javascript" src="{% static 'nfllinescomp/js/master.js' %}"></script>
+    </body>
+</html>

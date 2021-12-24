@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/group_update.css' %}">
+{% endblock %}
+{% block content %}
+{% if user == group.owner %}
+<div class="group_update">
+    <h2 class="group_update__title">Change Group Settings</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <h4 class="group_update__message" id="updategroupmessage">{{ message }}</h4>
+        {% endfor %}
+    {% endif %}
+    <form method="POST" class="group_update__form" autocomplete="off">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="group_update__form__field">
+                <div class="group_update__form__field__errors">
+                    {{ field.errors }}
+                </div>
+                <div class="group_update__form__field__label">
+                    {{ field.label }}
+                </div>
+                <div class="group_update__form__field__input">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <input type="submit" class="btn group_update__form__submit" value="Update">
+    </form>
+{% else %}
+    <h1>You Must be the Group Owner in Order to Make Changes to This Group</h1>
+{% endif %}
+</div>
+
+<script>
+    $(document).ready(function(){
+        document.getElementById('id_password').value='';
+        (document.getElementById('id_password').parentElement).style.visibility='hidden';
+        // (document.getElementById('id_password').parentElement).style.position='absolute';
+        (document.getElementById('id_password').parentElement).style.transition='all .2s';
+        (document.getElementById('id_password').parentElement).style.opacity='0';
+        (document.getElementById('id_password').parentElement).style.transform='translateY(-5rem)';
+        (document.getElementsByClassName('group_update__form__field__label')[2]).style.visibility='hidden';
+        // (document.getElementsByClassName('group_update__form__field__label')[2]).style.position='absolute';
+        (document.getElementsByClassName('group_update__form__field__label')[2]).style.transition='all .2s';
+        (document.getElementsByClassName('group_update__form__field__label')[2]).style.opacity='0';
+        (document.getElementsByClassName('group_update__form__field__label')[2]).style.transform='translateY(-5rem)';
+        (document.getElementById('id_password').parentElement.parentElement).style.transition='max-height .2s';
+        (document.getElementById('id_password').parentElement.parentElement).style.maxHeight='0';
+        (document.getElementById('id_password').parentElement.parentElement).style.marginBottom='0';
+        (document.getElementById('id_privacy').parentElement.parentElement).style.marginBottom='.5rem';
+        (document.getElementsByClassName('group_update__form')[0]).style.maxHeight='150';
+        // document.getElementById('id_password').value='a';
+        $('#id_privacy').on('change',function(){
+            // if(((document.getElementById('id_password').parentElement).style.visibility === 'hidden' && (document.getElementById('id_password').parentElement).style.position === 'absolute') && document.getElementById('id_privacy').children[1].children[0].checked == true){
+            if((document.getElementById('id_password').parentElement).style.visibility === 'hidden' && document.getElementById('id_privacy').children[1].children[0].checked == true){
+                // document.getElementById('id_password').value='';
+                (document.getElementById('id_password').parentElement).style.visibility='visible';
+                // (document.getElementById('id_password').parentElement).style.position='static';
+                (document.getElementById('id_password').parentElement).style.opacity='1';
+                (document.getElementById('id_password').parentElement).style.transform='translateY(-1rem)';
+                (document.getElementsByClassName('group_update__form__field__label')[2]).style.visibility='visible';
+                // (document.getElementsByClassName('group_update__form__field__label')[2]).style.position='static';
+                (document.getElementsByClassName('group_update__form__field__label')[2]).style.opacity='1';
+                (document.getElementsByClassName('group_update__form__field__label')[2]).style.transform='translateY(-1rem)';
+                (document.getElementById('id_password').parentElement.parentElement).style.maxHeight='8.7rem';
+                (document.getElementById('id_password').parentElement.parentElement).style.marginBottom='2rem';
+                (document.getElementById('id_privacy').parentElement.parentElement).style.marginBottom='2rem';
+                (document.getElementsByClassName('group_update__form')[0]).style.maxHeight='150rem';
+            }
+            else{
+                (document.getElementById('id_password').parentElement).style.visibility='hidden';
+                // (document.getElementById('id_password').parentElement).style.position='absolute';
+                (document.getElementById('id_password').parentElement).style.opacity='0';
+                (document.getElementById('id_password').parentElement).style.transform='translateY(-5rem)';
+                (document.getElementsByClassName('group_update__form__field__label')[2]).style.visibility='hidden';
+                // (document.getElementsByClassName('group_update__form__field__label')[2]).style.position='absolute';
+                (document.getElementsByClassName('group_update__form__field__label')[2]).style.opacity='0';
+                (document.getElementsByClassName('group_update__form__field__label')[2]).style.transform='translateY(-5rem)';
+                // document.getElementById('id_password').value='a';
+                (document.getElementById('id_password').parentElement.parentElement).style.maxHeight='0';
+                (document.getElementById('id_password').parentElement.parentElement).style.marginBottom='0';
+                (document.getElementById('id_privacy').parentElement.parentElement).style.marginBottom='.5rem';
+                (document.getElementsByClassName('group_update__form')[0]).style.maxHeight='150';
+            }
+        })
+
+        document.getElementsByClassName("group_update__form__submit")[0].addEventListener("click",function(){
+            if(document.getElementById('id_privacy_0').checked){
+                document.getElementById('id_password').value='a';
+            }
+        })
+
+        document.getElementById("id_privacy").style.backgroundColor="rgb(236, 236, 236)"
+        document.getElementById("id_name").parentElement.style.width="80%"
+        document.getElementById("id_password").parentElement.style.width="80%"
+        document.getElementById("id_description").parentElement.style.width="80%"
+    })
+
+    $(document).ready(function(){
+        x = document.getElementById('id_privacy').children[0].children[0].children[0]
+        parent = x.parentNode.parentNode
+        prev = x.parentNode
+        oldChild = x.parentNode.removeChild(x)
+        parent.insertBefore(oldChild, prev)
+
+        x = document.getElementById('id_privacy').children[1].children[0].children[0]
+        parent = x.parentNode.parentNode
+        prev = x.parentNode
+        oldChild = x.parentNode.removeChild(x)
+        parent.insertBefore(oldChild, prev)
+
+        // x = document.getElementById('id_length').children[0].children[0].children[0]
+        // parent = x.parentNode.parentNode
+        // prev = x.parentNode
+        // oldChild = x.parentNode.removeChild(x)
+        // parent.insertBefore(oldChild, prev)
+
+        // x = document.getElementById('id_length').children[1].children[0].children[0]
+        // parent = x.parentNode.parentNode
+        // prev = x.parentNode
+        // oldChild = x.parentNode.removeChild(x)
+        // parent.insertBefore(oldChild, prev)
+
+        // for(var i = 0; i < 16; i++){
+        //     x = document.getElementById('id_ppw').children[i].children[0].children[0]
+        //     parent = x.parentNode.parentNode
+        //     prev = x.parentNode
+        //     oldChild = x.parentNode.removeChild(x)
+        //     parent.insertBefore(oldChild, prev)
+        // }
+
+        // for(var i = 0; i < 25; i++){
+        //     x = document.getElementById('id_numplayers').children[i].children[0].children[0]
+        //     parent = x.parentNode.parentNode
+        //     prev = x.parentNode
+        //     oldChild = x.parentNode.removeChild(x)
+        //     parent.insertBefore(oldChild, prev)
+        // }
+    })
+</script>
+{% endblock %}
+
+<!-- {% if user == group.owner %}
+    <h1>Change Group Settings</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <h4 id="updategroupmessage">{{ message }}</h4>
+        {% endfor %}
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update">
+    </form>
+{% else %}
+    <h1>You Must be the Group Owner in Order to Make Changes to This Group</h1>
+{% endif %} -->

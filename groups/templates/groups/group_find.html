@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/group_find.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="group_find">
+    <h2 class="group_find__title">Find a Specific Group</h2>
+    <form method="GET" class="group_find__form">
+        <label for="group_find__form__input-name" class="group_find__form__label-name">Group Search</label>
+        <input id="group_find__form__input-name" type="text" class="group_find__form__input-name" name="name" value="{{ request.GET.name }}" placeholder="Search for a group here">
+        <div class="group_find__form__container">
+            <input type="submit" class="btn group_find__form__submit">
+        </div>
+        <div class="group_find__form__fields">
+            <div class="group_find__form__field">
+                <label for="group_find__form__field__input-length" class="group_find__form__field__label">Length:</label>
+                <input id="group_find__form__field__input-length" type="number" class="group_find__form__field__input" name="length" value="{{ request.GET.length }}">
+            </div>
+            <div class="group_find__form__field">
+                <label for="group_find__form__field__input-ppw" class="group_find__form__field__label">Picks per week:</label>
+                <input id="group_find__form__field__input-ppw" type="number" class="group_find__form__field__input" name="ppw" value="{{ request.GET.ppw }}">
+            </div>
+            <div class="group_find__form__field">
+                <label for="group_find__form__field__input-numplayers" class="group_find__form__field__label">Max Players:</label>
+                <input id="group_find__form__field__input-numplayers" type="number" class="group_find__form__field__input" name="numplayers" value="{{ request.GET.numplayers }}">
+            </div>
+            <div class="btn group_find__form__clear_all">Clear All</div>
+        </div>
+    </form>
+    <div class="group_find__group_display">
+        {% for group in object_list %}
+            <div class="btn group_find__group_display__group">
+                <a href="{% url 'groups:single' slug=group.slug %}" class="group_find__group_display__group__link">
+                    <h4 class="group_find__group_display__group__header">{{ group.name | truncatechars:30 }}</h4>
+                    <p class="group_find__group_display__group__description">
+                        <span class="group_find__group_display__group__description__length">Length: {{ group.length }}</span>
+                        <span class="group_find__group_display__group__description__ppw">Picks per week: {{ group.ppw }}</span>
+                        <span class="group_find__group_display__group__description__numplayers">Player count: {{ group.members.count }} / {{group.numplayers }}</span>
+                    </p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        document.getElementsByClassName("group_find__form__clear_all")[0].addEventListener("click",function(){
+            document.getElementById("group_find__form__input-name").value=''
+            document.getElementById("group_find__form__field__input-length").value=''
+            document.getElementById("group_find__form__field__input-ppw").value=''
+            document.getElementById("group_find__form__field__input-numplayers").value=''
+        })
+    })
+</script>
+{% endblock %}
+
+
+
+
+
+<!-- <h1 id="findgroupheader">Search For A Specific Group Here</h1>
+
+<div class="findgroupform">
+    <form method="GET">
+        <input id="name" class="findgroupsearch" type="text" name="name" value="{{ request.GET.name }}" placeholder="Search for a Group Here">
+        <button id="search_submit" type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div class="listfindgroups">
+    {% for group in object_list %}
+        <a href="{% url 'groups:single' slug=group.slug %}" class="list-group-item">
+            <h1 id="grouplistheader">{{group.name | truncatechars:30}}</h1>
+            <p id="grouplistcontent">Length: {{group.length}} &nbsp;&nbsp;&nbsp; Picks Per Week: {{group.ppw}} &nbsp;&nbsp;&nbsp; Players: {{group.members.count}}/{{group.numplayers}}</p>
+        </a>
+        
+    {% endfor %}
+</div> -->

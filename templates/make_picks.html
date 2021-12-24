@@ -1,0 +1,528 @@
+{% extends "base.html" %}
+{% block headcontent %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'nfllinescomp/css/make_picks.css' %}">
+
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="make_picks">
+        <form class="make_picks__form" method="POST">
+            <div class="make_picks__form__left">
+                <h5 class="make_picks__form__left__title">Make Your Picks For This Week</h5>
+                <div class="make_picks__form__left__body">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        {{ form }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="make_picks__form__right">
+                <div class="make_picks__form__right__cangroups">
+                    <h6 class="make_picks__form__right__cangroups__title">Make Picks For These Groups</h6>
+                    <div class="make_picks__form__right__cangroups__content">
+                        {% for group in usergroups %}
+                            <label class="groupcheckbox make_picks__form__right__cangroups__content__item">
+                                <input type="checkbox" value="{{ group.name }}" id="groupcheckboxid" name="groupcheckboxresult {{ group.name }}">
+                                <div style="display: none" class="canmakepickgroup btn make_picks__form__right__cangroups__content__item__group">
+                                    <h6 id="grouplistheader" class="make_picks__form__right__cangroups__content__group__header">{{group.name | truncatechars:16}}</h6>
+                                    <p id="grouplistcontent" class="make_picks__form__right__cangroups__content__group__description">
+                                        <span class="make_picks__form__right__cangroups__content__group__description__length">Length: {{group.length}}</span>
+                                        <span class="make_picks__form__right__cangroups__content__group__description__ppw">Picks Per Week: {{group.ppw}}</span>
+                                        <span class="make_picks__form__right__cangroups__content__group__description__numplayers">Players: {{group.members.count}}/{{group.numplayers}}</span>
+                                    </p>
+                                </div>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="make_picks__form__right__cannotgroups">
+                    <h6 class="make_picks__form__right__cannotgroups__title">You Have Either Too Many Or Too Few Games Selected To Make Picks For These Groups</h6>
+                    <div class="make_picks__form__right__cannotgroups__content">
+                        {% for group in usergroups %}
+                            <div class="cannotmakepickgroup btn make_picks__form__right__cannotgroups__content__group">
+                                <h6 id="grouplistheader" class="make_picks__form__right__cannotgroups__content__group__header">{{group.name | truncatechars:16}}</h6>
+                                <p id="grouplistcontent" class="make_picks__form__right__cannotgroups__content__group__description">
+                                    <span class="make_picks__form__right__cannotgroups__content__group__description__length">Length: {{group.length}}</span>
+                                    <span class="make_picks__form__right__cannotgroups__content__group__description__ppw">Picks Per Week: {{group.ppw}}</span>
+                                    <span class="make_picks__form__right__cannotgroups__content__group__description__numplayers">Players: {{group.members.count}}/{{group.numplayers}}</span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <input type="submit" class="btn make_picks__form__right__submit">
+                <div class="make_picks__form__right__messages">
+                    {% for message in messages %}
+                        <p class="make_picks__form__right__messages__message">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+    <script>
+        var c = 0
+        var lastc = 0
+        $(document).ready(function() {
+            var z = -1
+            var i = 0
+            $('label').each(function(){
+                if($(this).text() == 'Teampicked:'){
+                    $(this).remove()
+                }
+            });
+            $("input[type=checkbox]").each(function(index){
+                if (this.id.slice(0,8) == "id_form-"){
+                    if (z == -1){
+                        z=i + 2
+                        idoffirstcheckbox=(z) % 2
+                    }
+                    i++;
+                    var gamelines=JSON.parse('{{gamelines|escapejs}}')
+                    $(this).attr("id","makepicksformid"+i);
+                    var id=$(this).attr('id')
+                    newlabel=document.createElement('Label')
+                    newlabel.setAttribute('for',id)
+                    var teampictureaccess=(this.value).replace(' ','_')+".jpg"
+                    teampictureaccess=teampictureaccess.replace(' ','_')
+                    newlabel.innerHTML='<img src="../static/nfllinescomp/images/'+teampictureaccess+'">'
+                    newlabel.children[0].height="150"
+                    newlabel.children[0].width="150"
+                    parent=this.parentElement
+                    parent.insertBefore(newlabel,this)
+                    if (i % 2 == (z-1) % 2){
+                        line=document.createElement('h4')
+                        line.style='display:inline-block'
+                        var gamefavorite=teampictureaccess
+                        var actualgamefavorite=gamefavorite.split('.jpg')[0].replace('_',' ').replace('_',' ')
+                        for (var x in gamelines){
+                            if (actualgamefavorite == x){
+                                var actualgameline=(gamelines[x])
+                            }
+                        }
+                        line.innerText=actualgameline
+                        parent.parentElement.parentElement.insertBefore(line,newlabel.parentElement.parentElement.nextSibling)
+                    }
+                    var text=$(this).parent().html()
+                    var teamname=' '+this.value
+                    text=text.replace(teamname,'')
+                    $(this).parent().html(text)
+                }
+            });
+        });
+
+        setTimeout(function(){
+            var i=0
+            $("input[type=checkbox]").each(function(index){
+                if (this.id.slice(0,15) == "makepicksformid"){
+                    i++;
+                    $(this).click(function(){
+                        var id=$(this).attr('id')
+                        var idnumber=id.slice(15,)
+                        if(idoffirstcheckbox == 1){
+                            if (idnumber % 2 == 0){
+                                var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                                var helmetimg=this.previousSibling.children[0]
+                                if (this.checked == true){
+                                    helmetimg.height="200"
+                                    helmetimg.width="200"
+                                }
+                                else{
+                                    helmetimg.height="150"
+                                    helmetimg.width="150"
+                                    c = c-1
+                                }
+                                if (document.getElementById(checkid).checked == true){
+                                    document.getElementById(checkid).checked = false
+                                    document.getElementById(checkid).previousSibling.children[0].height="150"
+                                    document.getElementById(checkid).previousSibling.children[0].width="150"
+                                }
+                                else{
+                                    if (this.checked == true){
+                                        c = c+1
+                                    }
+                                }
+                            }
+                            if (idnumber % 2 == 1){
+                                var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                                var helmetimg=this.previousSibling.children[0]
+                                if (this.checked == true){
+                                    helmetimg.height="200"
+                                    helmetimg.width="200"
+                                }
+                                else{
+                                    helmetimg.height="150"
+                                    helmetimg.width="150"
+                                    c = c-1
+                                }
+                                if (document.getElementById(checkid).checked == true){
+                                    document.getElementById(checkid).checked = false
+                                    document.getElementById(checkid).previousSibling.children[0].height="150"
+                                    document.getElementById(checkid).previousSibling.children[0].width="150"
+                                }
+                                else{
+                                    if (this.checked == true){
+                                        c = c+1
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if (idnumber % 2 == 0){
+                                var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                                var helmetimg=this.previousSibling.children[0]
+                                if (this.checked == true){
+                                    helmetimg.height="200"
+                                    helmetimg.width="200"
+                                }
+                                else{
+                                    helmetimg.height="150"
+                                    helmetimg.width="150"
+                                    c = c-1
+                                }
+                                if (document.getElementById(checkid).checked == true){
+                                    document.getElementById(checkid).checked = false
+                                    document.getElementById(checkid).previousSibling.children[0].height="150"
+                                    document.getElementById(checkid).previousSibling.children[0].width="150"
+                                }
+                                else{
+                                    if (this.checked == true){
+                                        c = c+1
+                                    }
+                                }
+                            }
+                            if (idnumber % 2 == 1){
+                                var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                                var helmetimg=this.previousSibling.children[0]
+                                if (this.checked == true){
+                                    helmetimg.height="200"
+                                    helmetimg.width="200"
+                                }
+                                else{
+                                    helmetimg.height="150"
+                                    helmetimg.width="150"
+                                    c = c-1
+                                }
+                                if (document.getElementById(checkid).checked == true){
+                                    document.getElementById(checkid).checked = false
+                                    document.getElementById(checkid).previousSibling.children[0].height="150"
+                                    document.getElementById(checkid).previousSibling.children[0].width="150"
+                                }
+                                else{
+                                    if (this.checked == true){
+                                        c = c+1
+                                    }
+                                }
+                            }
+                            showgroups(c,lastc)
+                            lastc = c
+                        }
+                    })
+                }
+                else{
+                    $(this).click(function(){
+                        if(this.checked == true){
+                            this.parentElement.children[1].style = "color: #34bdeb;"
+                        }
+                        else{
+                            this.parentElement.children[1].style = "color: white;"
+                        }
+                    })
+                }
+            })
+        },150)
+
+        function showgroups(c,lastc){
+            var len = document.getElementsByClassName("groupcheckbox").length
+            if(c != lastc){
+                for(var f = 0 ; f < len ; f++){
+                    var groupcheck = document.getElementsByClassName("groupcheckbox")[f]
+                    groupcheck.children[0].checked = false
+                }
+            }
+            var cangroupscontent=document.querySelectorAll("#grouplistcontent")
+            var l=cangroupscontent.length/2
+            for(var x = 0; x < l ; x++){
+                if(cangroupscontent[x].innerHTML != undefined){
+                    var ppw=parseInt((cangroupscontent[x].innerHTML).split("Picks Per Week: ")[1].split(" ")[0],10)
+                    if (ppw == c){
+                        cangroupscontent[x].parentElement.style="border: 1px solid black;"
+                        cangroupscontent[x].previousSibling.previousSibling.style="display: block;"
+                        cangroupscontent[x].style="display: block;"
+                        cangroupscontent[x + l].parentElement.style="border: 0;"
+                        cangroupscontent[x + l].parentElement.style="display: none;"
+                        cangroupscontent[x + l].previousSibling.previousSibling.style="display: none;"
+                        cangroupscontent[x + l].style="display: none;"
+                    }
+                    else{
+                        cangroupscontent[x].parentElement.style="border: 0px;"
+                        cangroupscontent[x].parentElement.style="display: none;"
+                        cangroupscontent[x].style="display: none;"
+                        cangroupscontent[x + l].parentElement.style="border: 1px solid black;"
+                        cangroupscontent[x + l].previousSibling.previousSibling.style="display: block;"
+                        cangroupscontent[x + l].style="display: block;"
+                    }
+                }
+            }
+        }
+
+    </script>
+
+{% endif %}
+
+{% endblock %}
+
+<!-- {% if user.is_authenticated %}
+<form id="makepicksform" method="POST">
+    <div class="row">
+        <div class="col-6">
+            <h1>Make Your Picks For This Week</h1>
+                <div class="makepicksformsection">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        {{ form }}
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="col-6">
+            <h1 id="canmakepickslistheader" class="noSelect">Make Picks For These Groups</h1>
+            <div class="canmakepickslist">
+                {% for group in usergroups %}
+                <label class="groupcheckbox">
+                    <input type="checkbox" value="{{ group.name }}" id="groupcheckboxid" name="groupcheckboxresult {{ group.name }}">
+                    <div class="canmakepickgroup">
+                        <h1 id="grouplistheader" style="display: none" class="noSelect">{{group.name | truncatechars:16}}</h1>
+                        <p id="grouplistcontent" style="display: none" class="noSelect">Length: {{group.length}} &nbsp;&nbsp;&nbsp; Picks Per Week: {{group.ppw}} &nbsp;&nbsp;&nbsp; Players: {{group.members.count}}/{{group.numplayers}}</p>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+            <h3 id="cannotmakepickslistheader" class="noSelect">You Have Either Too Many Or Too Few Games Selected To Make Picks In These Groups</h3>
+            <div class="cannotmakepickslist">
+                {% for group in usergroups %}
+                    <div class="cannotmakepickgroup">
+                        <h1 id="grouplistheader" class="noSelect">{{group.name | truncatechars:16}}</h1>
+                        <p id="grouplistcontent" class="noSelect">Length: {{group.length}} &nbsp;&nbsp;&nbsp; Picks Per Week: {{group.ppw}} &nbsp;&nbsp;&nbsp; Players: {{group.members.count}}/{{group.numplayers}}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <input type="submit" value="Make Picks">
+    </div>
+</form>
+
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+<script>
+    var c = 0
+    var lastc = 0
+    $(document).ready(function() {
+        var z = -1
+        var i = 0
+        $('label').each(function(){
+            if($(this).text() == 'Teampicked:'){
+                $(this).remove()
+            }
+        });
+        $("input[type=checkbox]").each(function(index){
+            if (this.id.slice(0,8) == "id_form-"){
+                if (z == -1){
+                    z=i + 2
+                    idoffirstcheckbox=(z) % 2
+                }
+                i++;
+                var gamelines=JSON.parse('{{gamelines|escapejs}}')
+                $(this).attr("id","makepicksformid"+i);
+                var id=$(this).attr('id')
+                newlabel=document.createElement('Label')
+                newlabel.setAttribute('for',id)
+                var teampictureaccess=(this.value).replace(' ','_')+".jpg"
+                teampictureaccess=teampictureaccess.replace(' ','_')
+                newlabel.innerHTML='<img src="../static/nfllinescomp/images/'+teampictureaccess+'">'
+                newlabel.children[0].height="150"
+                newlabel.children[0].width="150"
+                parent=this.parentElement
+                parent.insertBefore(newlabel,this)
+                if (i % 2 == (z-1) % 2){
+                    line=document.createElement('h4')
+                    line.style='display:inline-block'
+                    var gamefavorite=teampictureaccess
+                    var actualgamefavorite=gamefavorite.split('.jpg')[0].replace('_',' ').replace('_',' ')
+                    for (var x in gamelines){
+                        if (actualgamefavorite == x){
+                            var actualgameline=(gamelines[x])
+                        }
+                    }
+                    line.innerText=actualgameline
+                    parent.parentElement.parentElement.insertBefore(line,newlabel.parentElement.parentElement.nextSibling)
+                }
+                var text=$(this).parent().html()
+                var teamname=' '+this.value
+                text=text.replace(teamname,'')
+                $(this).parent().html(text)
+            }
+        });
+    });
+
+    setTimeout(function(){
+        var i=0
+        $("input[type=checkbox]").each(function(index){
+            if (this.id.slice(0,15) == "makepicksformid"){
+                i++;
+                $(this).click(function(){
+                    var id=$(this).attr('id')
+                    var idnumber=id.slice(15,)
+                    if(idoffirstcheckbox == 1){
+                        if (idnumber % 2 == 0){
+                            var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                            var helmetimg=this.previousSibling.children[0]
+                            if (this.checked == true){
+                                helmetimg.height="200"
+                                helmetimg.width="200"
+                            }
+                            else{
+                                helmetimg.height="150"
+                                helmetimg.width="150"
+                                c = c-1
+                            }
+                            if (document.getElementById(checkid).checked == true){
+                                document.getElementById(checkid).checked = false
+                                document.getElementById(checkid).previousSibling.children[0].height="150"
+                                document.getElementById(checkid).previousSibling.children[0].width="150"
+                            }
+                            else{
+                                if (this.checked == true){
+                                    c = c+1
+                                }
+                            }
+                        }
+                        if (idnumber % 2 == 1){
+                            var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                            var helmetimg=this.previousSibling.children[0]
+                            if (this.checked == true){
+                                helmetimg.height="200"
+                                helmetimg.width="200"
+                            }
+                            else{
+                                helmetimg.height="150"
+                                helmetimg.width="150"
+                                c = c-1
+                            }
+                            if (document.getElementById(checkid).checked == true){
+                                document.getElementById(checkid).checked = false
+                                document.getElementById(checkid).previousSibling.children[0].height="150"
+                                document.getElementById(checkid).previousSibling.children[0].width="150"
+                            }
+                            else{
+                                if (this.checked == true){
+                                    c = c+1
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        if (idnumber % 2 == 0){
+                            var checkid="makepicksformid"+(Number(idnumber)-1).toString()
+                            var helmetimg=this.previousSibling.children[0]
+                            if (this.checked == true){
+                                helmetimg.height="200"
+                                helmetimg.width="200"
+                            }
+                            else{
+                                helmetimg.height="150"
+                                helmetimg.width="150"
+                                c = c-1
+                            }
+                            if (document.getElementById(checkid).checked == true){
+                                document.getElementById(checkid).checked = false
+                                document.getElementById(checkid).previousSibling.children[0].height="150"
+                                document.getElementById(checkid).previousSibling.children[0].width="150"
+                            }
+                            else{
+                                if (this.checked == true){
+                                    c = c+1
+                                }
+                            }
+                        }
+                        if (idnumber % 2 == 1){
+                            var checkid="makepicksformid"+(Number(idnumber)+1).toString()
+                            var helmetimg=this.previousSibling.children[0]
+                            if (this.checked == true){
+                                helmetimg.height="200"
+                                helmetimg.width="200"
+                            }
+                            else{
+                                helmetimg.height="150"
+                                helmetimg.width="150"
+                                c = c-1
+                            }
+                            if (document.getElementById(checkid).checked == true){
+                                document.getElementById(checkid).checked = false
+                                document.getElementById(checkid).previousSibling.children[0].height="150"
+                                document.getElementById(checkid).previousSibling.children[0].width="150"
+                            }
+                            else{
+                                if (this.checked == true){
+                                    c = c+1
+                                }
+                            }
+                        }
+                        showgroups(c,lastc)
+                        lastc = c
+                    }
+                })
+            }
+            else{
+                $(this).click(function(){
+                    if(this.checked == true){
+                        this.parentElement.style = "color: blue;"
+                    }
+                    else{
+                        this.parentElement.style = "color: black;"
+                    }
+                })
+            }
+        })
+    },150)
+
+    function showgroups(c,lastc){
+        var len = document.getElementsByClassName("groupcheckbox").length
+        if(c != lastc){
+            for(var f = 0 ; f < len ; f++){
+                var groupcheck = document.getElementsByClassName("groupcheckbox")[f]
+                groupcheck.children[0].checked = false
+            }
+        }
+        var cangroupscontent=document.querySelectorAll("#grouplistcontent")
+        var l=cangroupscontent.length/2
+        for(var x = 0; x < l ; x++){
+            if(cangroupscontent[x].innerHTML != undefined){
+                var ppw=parseInt((cangroupscontent[x].innerHTML).split("&nbsp;&nbsp;&nbsp; Picks Per Week: ")[1].split(" ")[0],10)
+                if (ppw == c){
+                    cangroupscontent[x].parentElement.style="border: 1px solid black;"
+                    cangroupscontent[x].previousSibling.previousSibling.style="display: block;"
+                    cangroupscontent[x].style="display: block;"
+                    cangroupscontent[x + l].parentElement.style="border: 0;"
+                    cangroupscontent[x + l].previousSibling.previousSibling.style="display: none;"
+                    cangroupscontent[x + l].style="display: none;"
+                }
+                else{
+                    cangroupscontent[x].parentElement.style="border: 0px;"
+                    cangroupscontent[x].previousSibling.previousSibling.style="display: none;"
+                    cangroupscontent[x].style="display: none;"
+                    cangroupscontent[x + l].parentElement.style="border: 1px solid black;"
+                    cangroupscontent[x + l].previousSibling.previousSibling.style="display: block;"
+                    cangroupscontent[x + l].style="display: block;"
+                }
+            }
+        }
+    }
+
+</script> -->
