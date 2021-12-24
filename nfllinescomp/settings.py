@@ -26,7 +26,7 @@ SECRET_KEY = 'c57(xn*_(8hoq$2t60j+h5%hsm@o%h8s!5zk6$b56y*!kl0vuy'
 # SECURITY WARNING: don't run with debug turned on in production!
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['www.nfllinescompetition.com', 'nfllinescompetition.com', 'nfllinescompetition.herokuapp.com', '127.0.0.1']
 
